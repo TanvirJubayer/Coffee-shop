@@ -9,10 +9,25 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['total_amount', 'status'];
+    protected $fillable = ['user_id', 'table_id', 'total_amount', 'status', 'type'];
 
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function table()
+    {
+        return $this->belongsTo(RestaurantTable::class, 'table_id');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
     }
 }

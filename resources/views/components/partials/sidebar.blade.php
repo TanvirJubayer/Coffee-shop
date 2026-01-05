@@ -22,6 +22,12 @@
                                             <div class="text">Dashboard</div>
                                         </a>
                                     </li>
+                                    <li class="menu-item">
+                                        <a href="{{ route('pos.index') }}" class="">
+                                            <div class="icon"><i class="icon-monitor"></i></div>
+                                            <div class="text">POS System</div>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="center-item">

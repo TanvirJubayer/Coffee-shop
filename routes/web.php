@@ -21,3 +21,9 @@ Route::get('/inventory', [App\Http\Controllers\InventoryController::class, 'inde
 Route::get('/inventory/history', [App\Http\Controllers\InventoryController::class, 'history'])->name('inventory.history');
 Route::get('/inventory/adjust/{product}', [App\Http\Controllers\InventoryController::class, 'adjust'])->name('inventory.adjust');
 Route::put('/inventory/update/{product}', [App\Http\Controllers\InventoryController::class, 'update'])->name('inventory.update');
+
+// POS Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/pos', [App\Http\Controllers\PosController::class, 'index'])->name('pos.index');
+    Route::post('/pos', [App\Http\Controllers\PosController::class, 'store'])->name('pos.store');
+});
