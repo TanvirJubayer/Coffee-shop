@@ -37,13 +37,18 @@ class ProductController extends Controller
         $input = $request->all();
 
         if ($image = $request->file('image')) {
-            $destinationPath = 'images/products/';
-            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
-            $image->move(public_path($destinationPath), $profileImage);
-            $input['image'] = $profileImage;
+            $imgName = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->storeAs('products', $imgName, 'public');
+            $input['image'] = $imgName;
         }
 
-        $input['slug'] = \Illuminate\Support\Str::slug($request->name);
+        $slug = \Illuminate\Support\Str::slug($request->name);
+        $originalSlug = $slug;
+        $i = 1;
+        while (Product::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $i++;
+        }
+        $input['slug'] = $slug;
 
         Product::create($input);
 
@@ -68,15 +73,25 @@ class ProductController extends Controller
         $input = $request->all();
 
         if ($image = $request->file('image')) {
-            $destinationPath = 'images/products/';
-            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
-            $image->move(public_path($destinationPath), $profileImage);
-            $input['image'] = $profileImage;
+            // Delete old image
+            if ($product->image && \Illuminate\Support\Facades\Storage::disk('public')->exists('products/' . $product->image)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete('products/' . $product->image);
+            }
+
+            $imgName = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->storeAs('products', $imgName, 'public');
+            $input['image'] = $imgName;
         } else {
             unset($input['image']);
         }
 
-        $input['slug'] = \Illuminate\Support\Str::slug($request->name);
+        $slug = \Illuminate\Support\Str::slug($request->name);
+        $originalSlug = $slug;
+        $i = 1;
+        while (Product::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
+            $slug = $originalSlug . '-' . $i++;
+        }
+        $input['slug'] = $slug;
 
         $product->update($input);
 
@@ -86,6 +101,11 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        // Delete image
+        if ($product->image && \Illuminate\Support\Facades\Storage::disk('public')->exists('products/' . $product->image)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete('products/' . $product->image);
+        }
+
         $product->delete();
         return redirect()->route('products.index')
                         ->with('success','Product deleted successfully');

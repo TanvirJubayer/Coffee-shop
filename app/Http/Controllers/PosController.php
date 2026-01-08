@@ -29,19 +29,21 @@ class PosController extends Controller
             'total_amount' => 'required|numeric',
             'payment_method' => 'required|string',
             'amount_received' => 'required|numeric',
+            'order_type' => 'required|in:dine_in,takeaway',
+            'table_id' => 'required_if:order_type,dine_in|nullable|exists:restaurant_tables,id',
         ]);
 
         return DB::transaction(function () use ($request) {
             // Create Order
             $order = Order::create([
-                'user_id' => auth()->id(), // Assuming logged in user
-                'table_id' => $request->table_id, // Nullable
+                'user_id' => auth()->id(),
+                'table_id' => $request->table_id,
                 'total_amount' => $request->total_amount,
-                'status' => 'completed', // Direct sale
-                'type' => $request->table_id ? 'dine_in' : 'takeaway',
+                'status' => 'completed',
+                'type' => $request->order_type,
             ]);
 
-            // Create Order Items
+            // Create Order Items and Update Inventory
             foreach ($request->cart as $item) {
                 $order->items()->create([
                     'product_id' => $item['id'],
@@ -49,8 +51,21 @@ class PosController extends Controller
                     'price' => $item['price'],
                     'notes' => $item['notes'] ?? null,
                 ]);
-                
-                // Handle Addons if implemented in frontend cart structure
+
+                // Reduce Stock
+                $product = Product::findOrFail($item['id']);
+                $newBalance = $product->quantity - $item['quantity'];
+                $product->update(['quantity' => $newBalance]);
+
+                // Log Transaction
+                \App\Models\InventoryTransaction::create([
+                    'product_id' => $product->id,
+                    'user_id' => auth()->id(),
+                    'type' => 'sale',
+                    'quantity' => $item['quantity'],
+                    'balance' => $newBalance,
+                    'notes' => 'POS Sale - Order #' . $order->id,
+                ]);
             }
 
             // Create Payment
@@ -60,8 +75,13 @@ class PosController extends Controller
                 'payment_method' => $request->payment_method,
                 'status' => 'completed',
             ]);
+
+            // Update Table Status if Dine-in
+            if ($request->order_type === 'dine_in' && $request->table_id) {
+                \App\Models\RestaurantTable::where('id', $request->table_id)
+                    ->update(['status' => 'occupied']);
+            }
             
-            // Limit output for JSON response
             $order->load('items');
 
             return response()->json([

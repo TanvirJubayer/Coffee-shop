@@ -15,6 +15,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::resource('products', App\Http\Controllers\ProductController::class);
 Route::resource('categories', App\Http\Controllers\CategoryController::class);
 Route::resource('suppliers', App\Http\Controllers\SupplierController::class);
+Route::resource('tables', App\Http\Controllers\RestaurantTableController::class);
+Route::patch('/tables/{table}/status', [App\Http\Controllers\RestaurantTableController::class, 'updateStatus'])->name('tables.updateStatus');
 
 // Inventory Routes
 Route::get('/inventory', [App\Http\Controllers\InventoryController::class, 'index'])->name('inventory.index');

@@ -62,7 +62,7 @@
                         @foreach ($products as $product)
                             <li class="product-item gap14">
                                 <div class="image no-bg">
-                                    <img src="{{ asset('images/products/' . $product->image) }}" alt="{{ $product->name }}">
+                                    <img src="{{ asset('storage/products/' . $product->image) }}" alt="{{ $product->name }}">
                                 </div>
                                 <div class="flex items-center justify-between gap20 flex-grow">
                                     <div class="name">

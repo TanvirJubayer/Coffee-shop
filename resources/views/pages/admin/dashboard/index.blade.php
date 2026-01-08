@@ -163,131 +163,33 @@
                                         </div>
                                         <div class="wg-table table-top-product">
                                             <ul class="flex flex-column gap14">
+                                                @foreach($topProducts as $top)
+                                                @php $p = $top->product; @endphp
                                                 <li class="product-item">
                                                     <div class="image">
-                                                        <img src="{{ asset('images') }}/products/1.png"
-                                                            alt="">
+                                                        <img src="{{ asset('storage/products/' . ($p->image ?? '1.png')) }}"
+                                                            alt="{{ $p->name ?? 'Unknown' }}">
                                                     </div>
                                                     <div class="flex items-center justify-between flex-grow">
                                                         <div class="name">
-                                                            <a href="product-list.html" class="body-title-2">Patimax
-                                                                Fragrance Long...</a>
-                                                            <div class="text-tiny mt-3">100 Items</div>
+                                                            <a href="{{ route('products.edit', $p->id ?? 0) }}" class="body-title-2">{{ $p->name ?? 'Unknown' }}</a>
+                                                            <div class="text-tiny mt-3">{{ $top->total_sold }} Items Sold</div>
                                                         </div>
                                                         <div>
-                                                            <div class="text-tiny mb-3">Coupon Code</div>
-                                                            <div class="body-text">Sflat</div>
+                                                            <div class="text-tiny mb-3">Price</div>
+                                                            <div class="body-text">${{ number_format($p->price ?? 0, 2) }}</div>
                                                         </div>
                                                         <div class="country">
-                                                            <img src="{{ asset('images') }}/country/2.png"
-                                                                alt="">
+                                                            <div class="text-tiny mb-3">Total Revenue</div>
+                                                            <div class="body-text">${{ number_format(($p->price ?? 0) * $top->total_sold, 2) }}</div>
                                                         </div>
                                                         <div>
-                                                            <div class="body-title-2 mb-3">-15%</div>
-                                                            <div class="text-tiny">$27.00</div>
+                                                            <div class="body-title-2 mb-3">Stock</div>
+                                                            <div class="text-tiny">{{ $p->quantity ?? 0 }} Left</div>
                                                         </div>
                                                     </div>
                                                 </li>
-                                                <li class="product-item">
-                                                    <div class="image">
-                                                        <img src="{{ asset('images') }}/products/2.png"
-                                                            alt="">
-                                                    </div>
-                                                    <div class="flex items-center justify-between flex-grow">
-                                                        <div class="name">
-                                                            <a href="product-list.html" class="body-title-2">Nulo
-                                                                MedalSeries Adult Cat...</a>
-                                                            <div class="text-tiny mt-3">100 Items</div>
-                                                        </div>
-                                                        <div>
-                                                            <div class="text-tiny mb-3">Coupon Code</div>
-                                                            <div class="body-text">Sflat</div>
-                                                        </div>
-                                                        <div class="country">
-                                                            <img src="{{ asset('images') }}/country/3.png"
-                                                                alt="">
-                                                        </div>
-                                                        <div>
-                                                            <div class="body-title-2 mb-3">-15%</div>
-                                                            <div class="text-tiny">$27.00</div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="product-item">
-                                                    <div class="image">
-                                                        <img src="{{ asset('images') }}/products/3.png"
-                                                            alt="">
-                                                    </div>
-                                                    <div class="flex items-center justify-between flex-grow">
-                                                        <div class="name">
-                                                            <a href="product-list.html" class="body-title-2">Pedigree
-                                                                Puppy Dry Dog...</a>
-                                                            <div class="text-tiny mt-3">100 Items</div>
-                                                        </div>
-                                                        <div>
-                                                            <div class="text-tiny mb-3">Coupon Code</div>
-                                                            <div class="body-text">Sflat</div>
-                                                        </div>
-                                                        <div class="country">
-                                                            <img src="{{ asset('images') }}/country/1.png"
-                                                                alt="">
-                                                        </div>
-                                                        <div>
-                                                            <div class="body-title-2 mb-3">-15%</div>
-                                                            <div class="text-tiny">$27.00</div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="product-item">
-                                                    <div class="image">
-                                                        <img src="{{ asset('images') }}/products/4.png"
-                                                            alt="">
-                                                    </div>
-                                                    <div class="flex items-center justify-between flex-grow">
-                                                        <div class="name">
-                                                            <a href="product-list.html" class="body-title-2">Biscoito
-                                                                Premier Cookie...</a>
-                                                            <div class="text-tiny mt-3">100 Items</div>
-                                                        </div>
-                                                        <div>
-                                                            <div class="text-tiny mb-3">Coupon Code</div>
-                                                            <div class="body-text">Sflat</div>
-                                                        </div>
-                                                        <div class="country">
-                                                            <img src="{{ asset('images') }}/country/4.png"
-                                                                alt="">
-                                                        </div>
-                                                        <div>
-                                                            <div class="body-title-2 mb-3">-15%</div>
-                                                            <div class="text-tiny">$27.00</div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="product-item">
-                                                    <div class="image">
-                                                        <img src="{{ asset('images') }}/products/5.png"
-                                                            alt="">
-                                                    </div>
-                                                    <div class="flex items-center justify-between flex-grow">
-                                                        <div class="name">
-                                                            <a href="product-list.html"
-                                                                class="body-title-2 mb-3">Pedigree Adult Dry Dog...</a>
-                                                            <div class="text-tiny">100 Items</div>
-                                                        </div>
-                                                        <div>
-                                                            <div class="text-tiny mb-3">Coupon Code</div>
-                                                            <div class="body-text">Sflat</div>
-                                                        </div>
-                                                        <div class="country">
-                                                            <img src="{{ asset('images') }}/country/5.png"
-                                                                alt="">
-                                                        </div>
-                                                        <div>
-                                                            <div class="body-title-2 mb-3">-15%</div>
-                                                            <div class="text-tiny">$27.00</div>
-                                                        </div>
-                                                    </div>
-                                                </li>
+                                                @endforeach
                                             </ul>
                                         </div>
                                     </div>
@@ -629,7 +531,7 @@
                                             <ul class="flex flex-column gap10">
                                                 <li class="product-item gap14">
                                                     <div class="image">
-                                                        <img src="{{ asset('images') }}/products/6.png"
+                                                        <img src="{{ asset('storage/products/6.png') }}"
                                                             alt="">
                                                     </div>
                                                     <div class="flex items-center justify-between flex-grow">
@@ -647,7 +549,7 @@
                                                 </li>
                                                 <li class="product-item gap14">
                                                     <div class="image">
-                                                        <img src="{{ asset('images') }}/products/7.png"
+                                                        <img src="{{ asset('storage/products/7.png') }}"
                                                             alt="">
                                                     </div>
                                                     <div class="flex items-center justify-between flex-grow">
@@ -665,7 +567,7 @@
                                                 </li>
                                                 <li class="product-item gap14">
                                                     <div class="image">
-                                                        <img src="{{ asset('images') }}/products/8.png"
+                                                        <img src="{{ asset('storage/products/8.png') }}"
                                                             alt="">
                                                     </div>
                                                     <div class="flex items-center justify-between flex-grow">
@@ -683,7 +585,7 @@
                                                 </li>
                                                 <li class="product-item gap14">
                                                     <div class="image">
-                                                        <img src="{{ asset('images') }}/products/9.png"
+                                                        <img src="{{ asset('storage/products/9.png') }}"
                                                             alt="">
                                                     </div>
                                                     <div class="flex items-center justify-between flex-grow">
@@ -703,7 +605,7 @@
                                                 </li>
                                                 <li class="product-item gap14">
                                                     <div class="image">
-                                                        <img src="{{ asset('images') }}/products/10.png"
+                                                        <img src="{{ asset('storage/products/10.png') }}"
                                                             alt="">
                                                     </div>
                                                     <div class="flex items-center justify-between flex-grow">
@@ -788,9 +690,9 @@
                                                 <li class="product-item gap14">
                                                     <div class="image small">
                                                         @if($product && $product->image)
-                                                            <img src="{{ asset('images/products/' . $product->image) }}" alt="">
+                                                            <img src="{{ asset('storage/products/' . $product->image) }}" alt="">
                                                         @else
-                                                            <img src="{{ asset('images/products/1.png') }}" alt="">
+                                                            <img src="{{ asset('storage/products/1.png') }}" alt="">
                                                         @endif
                                                     </div>
                                                     <div class="flex items-center justify-between flex-grow gap10">
@@ -840,28 +742,28 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex items-center gap10">
-                                                    <h4>$37,802</h4>
-                                                    <div class="box-icon-trending up">
-                                                        <i class="icon-trending-up"></i>
-                                                        <div class="body-title number">0.56%</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div class="mb-2">
-                                                    <div class="block-legend">
-                                                        <div class="dot t2"></div>
-                                                        <div class="text-tiny">Profit</div>
-                                                    </div>
-                                                </div>
-                                                <div class="flex items-center gap10">
-                                                    <h4>$28,305</h4>
-                                                    <div class="box-icon-trending up">
-                                                        <i class="icon-trending-up"></i>
-                                                        <div class="body-title number">0.56%</div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                                     <h4>${{ number_format($totalSales, 2) }}</h4>
+                                                     <div class="box-icon-trending up">
+                                                         <i class="icon-trending-up"></i>
+                                                         <div class="body-title number">0.00%</div>
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                             <div>
+                                                 <div class="mb-2">
+                                                     <div class="block-legend">
+                                                         <div class="dot t2"></div>
+                                                         <div class="text-tiny">Profit</div>
+                                                     </div>
+                                                 </div>
+                                                 <div class="flex items-center gap10">
+                                                     <h4>${{ number_format($profit, 2) }}</h4>
+                                                     <div class="box-icon-trending up">
+                                                         <i class="icon-trending-up"></i>
+                                                         <div class="body-title number">0.00%</div>
+                                                     </div>
+                                                 </div>
+                                             </div>
                                         </div>
                                         <div id="line-chart-6"></div>
                                     </div>

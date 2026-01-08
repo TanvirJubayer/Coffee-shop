@@ -116,6 +116,12 @@
                                         </ul>
                                     </li>
                                     <li class="menu-item">
+                                        <a href="{{ route('tables.index') }}" class="">
+                                            <div class="icon"><i class="icon-grid"></i></div>
+                                            <div class="text">Tables Management</div>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
                                         <a href="report.html" class="">
                                             <div class="icon"><i class="icon-pie-chart"></i></div>
                                             <div class="text">Reports</div>

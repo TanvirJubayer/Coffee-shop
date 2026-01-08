@@ -41,7 +41,7 @@
                         <div class="upload-image mb-16">
                              @if($category->image)
                                 <div class="item">
-                                    <img src="{{ asset('images/categories/' . $category->image) }}" alt="">
+                                    <img src="{{ asset('storage/categories/' . $category->image) }}" alt="">
                                 </div>
                             @endif
                             <div class="item up-load">

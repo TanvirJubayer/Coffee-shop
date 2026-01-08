@@ -50,7 +50,7 @@ class InventoryController extends Controller
         InventoryTransaction::create([
             'product_id' => $product->id,
             'supplier_id' => $request->supplier_id,
-            // 'user_id' => auth()->id(), 
+            'user_id' => auth()->id(), 
             'type' => $request->type,
             'quantity' => $quantity,
             'balance' => $newBalance,

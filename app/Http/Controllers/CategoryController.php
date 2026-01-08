@@ -31,13 +31,18 @@ class CategoryController extends Controller
         $input = $request->all();
         
         if ($image = $request->file('image')) {
-            $destinationPath = 'images/categories/';
-            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
-            $image->move(public_path($destinationPath), $profileImage);
-            $input['image'] = $profileImage;
+            $imgName = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->storeAs('categories', $imgName, 'public');
+            $input['image'] = $imgName;
         }
         
-        $input['slug'] = \Illuminate\Support\Str::slug($request->name);
+        $slug = \Illuminate\Support\Str::slug($request->name);
+        $originalSlug = $slug;
+        $i = 1;
+        while (Category::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $i++;
+        }
+        $input['slug'] = $slug;
         
         Category::create($input);
         
@@ -59,15 +64,25 @@ class CategoryController extends Controller
         $input = $request->all();
 
         if ($image = $request->file('image')) {
-            $destinationPath = 'images/categories/';
-            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
-            $image->move(public_path($destinationPath), $profileImage);
-            $input['image'] = $profileImage;
+            // Delete old image
+            if ($category->image && \Illuminate\Support\Facades\Storage::disk('public')->exists('categories/' . $category->image)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete('categories/' . $category->image);
+            }
+
+            $imgName = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->storeAs('categories', $imgName, 'public');
+            $input['image'] = $imgName;
         } else {
             unset($input['image']);
         }
 
-        $input['slug'] = \Illuminate\Support\Str::slug($request->name);
+        $slug = \Illuminate\Support\Str::slug($request->name);
+        $originalSlug = $slug;
+        $i = 1;
+        while (Category::where('slug', $slug)->where('id', '!=', $category->id)->exists()) {
+            $slug = $originalSlug . '-' . $i++;
+        }
+        $input['slug'] = $slug;
 
         $category->update($input);
 
@@ -77,6 +92,11 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
+        // Delete image
+        if ($category->image && \Illuminate\Support\Facades\Storage::disk('public')->exists('categories/' . $category->image)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete('categories/' . $category->image);
+        }
+
         $category->delete();
         return redirect()->route('categories.index')
                         ->with('success','Category deleted successfully');

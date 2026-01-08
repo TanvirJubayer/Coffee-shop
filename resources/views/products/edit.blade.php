@@ -68,7 +68,7 @@
                         <div class="upload-image mb-16">
                             @if($product->image)
                                 <div class="item">
-                                    <img src="{{ asset('images/products/' . $product->image) }}" alt="">
+                                    <img src="{{ asset('storage/products/' . $product->image) }}" alt="">
                                 </div>
                             @endif
                             <div class="item up-load">

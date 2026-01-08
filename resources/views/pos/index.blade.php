@@ -27,7 +27,7 @@
                 <template x-for="product in filteredProducts" :key="product.id">
                     <div class="col-md-4 col-sm-6">
                         <div class="card h-100 shadow-sm" @click="addToCart(product)" style="cursor: pointer; transition: transform 0.2s;">
-                            <img :src="product.image ? '{{ asset('storage') }}/' + product.image : 'https://placehold.co/200x150'" class="card-img-top" alt="..." style="height: 150px; object-fit: cover;">
+                            <img :src="product.image ? '{{ asset('storage/products') }}/' + product.image : 'https://placehold.co/200x150'" class="card-img-top" alt="..." style="height: 150px; object-fit: cover;">
                             <div class="card-body p-2 text-center">
                                 <h6 class="card-title fw-bold" x-text="product.name"></h6>
                                 <p class="card-text text-primary mb-0 fw-bold">$<span x-text="parseFloat(product.price).toFixed(2)"></span></p>
@@ -210,7 +210,7 @@
             },
 
             get tax() {
-                return this.subtotal * 0.10; // 10% tax
+                return this.subtotal * ({{ config('app.tax_rate', 10) }} / 100);
             },
 
             get total() {
@@ -220,6 +220,12 @@
             async processPayment() {
                 this.processing = true;
                 try {
+                    if (this.orderType === 'dine_in' && !this.selectedTable) {
+                        alert('Please select a table for Dine In orders.');
+                        this.processing = false;
+                        return;
+                    }
+
                     const response = await fetch('{{ route('pos.store') }}', {
                         method: 'POST',
                         headers: {

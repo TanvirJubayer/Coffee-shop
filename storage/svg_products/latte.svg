@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <style>
+            .bg { fill: #A0826D; }
+            .circle { fill: #C9A78B; }
+            .text { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; fill: white; text-anchor: middle; }
+        </style>
+    </defs>
+    <rect width="300" height="300" class="bg"/>
+    <circle cx="150" cy="150" r="80" class="circle"/>
+    <text x="150" y="160" class="text">Latte</text>
+</svg>
