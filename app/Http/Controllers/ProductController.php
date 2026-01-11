@@ -31,6 +31,9 @@ class ProductController extends Controller
             'name' => 'required',
             'category_id' => 'required',
             'price' => 'required|numeric',
+            'quantity' => 'required|integer|min:0',
+            'alert_threshold' => 'nullable|integer|min:0',
+            'sku' => 'nullable|string|unique:products,sku',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -50,6 +53,11 @@ class ProductController extends Controller
         }
         $input['slug'] = $slug;
 
+        // Auto-generate SKU if not provided
+        if (empty($input['sku'])) {
+            $input['sku'] = 'SKU-' . strtoupper(uniqid());
+        }
+
         Product::create($input);
 
         return redirect()->route('products.index')
@@ -68,6 +76,9 @@ class ProductController extends Controller
             'name' => 'required',
             'category_id' => 'required',
             'price' => 'required|numeric',
+            'quantity' => 'required|integer|min:0',
+            'alert_threshold' => 'nullable|integer|min:0',
+            'sku' => 'nullable|string|unique:products,sku,' . $product->id,
         ]);
 
         $input = $request->all();
@@ -92,6 +103,11 @@ class ProductController extends Controller
             $slug = $originalSlug . '-' . $i++;
         }
         $input['slug'] = $slug;
+
+         // Auto-generate SKU if not provided
+         if (empty($input['sku'])) {
+            $input['sku'] = 'SKU-' . strtoupper(uniqid());
+        }
 
         $product->update($input);
 

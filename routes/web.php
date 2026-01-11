@@ -28,4 +28,5 @@ Route::put('/inventory/update/{product}', [App\Http\Controllers\InventoryControl
 Route::middleware('auth')->group(function () {
     Route::get('/pos', [App\Http\Controllers\PosController::class, 'index'])->name('pos.index');
     Route::post('/pos', [App\Http\Controllers\PosController::class, 'store'])->name('pos.store');
+    Route::get('/pos/invoice/{order}', [App\Http\Controllers\PosController::class, 'invoice'])->name('pos.invoice');
 });

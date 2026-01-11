@@ -58,6 +58,21 @@
                         </fieldset>
                     </div>
 
+                    <div class="cols gap22">
+                        <fieldset class="sku">
+                            <div class="body-title mb-10">SKU</div>
+                            <input class="mb-10" type="text" placeholder="Enter SKU" name="sku" tabindex="0" value="{{ $product->sku }}">
+                        </fieldset>
+                        <fieldset class="quantity">
+                            <div class="body-title mb-10">Quantity</div>
+                            <input class="mb-10" type="number" placeholder="Enter quantity" name="quantity" tabindex="0" value="{{ $product->quantity }}" required>
+                        </fieldset>
+                        <fieldset class="alert_threshold">
+                            <div class="body-title mb-10">Alert Threshold</div>
+                            <input class="mb-10" type="number" placeholder="Low stock alert at" name="alert_threshold" tabindex="0" value="{{ $product->alert_threshold }}">
+                        </fieldset>
+                    </div>
+
                     <fieldset class="description">
                         <div class="body-title mb-10">Description</div>
                         <textarea class="mb-10" name="description" placeholder="Description" tabindex="0">{{ $product->description }}</textarea>

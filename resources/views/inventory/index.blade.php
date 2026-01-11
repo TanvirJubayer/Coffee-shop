@@ -65,6 +65,7 @@
                                 <div class="flex items-center justify-between gap20 flex-grow">
                                     <div class="name">
                                         <a href="#" class="body-title-2">{{ $product->name }}</a>
+                                        <div class="text-tiny mt-3">SKU: {{ $product->sku }}</div>
                                     </div>
                                     <div class="body-text">{{ $product->category->name }}</div>
                                     <div class="body-text">{{ $product->quantity }}</div>

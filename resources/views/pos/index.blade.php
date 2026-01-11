@@ -31,6 +31,7 @@
                             <div class="card-body p-2 text-center">
                                 <h6 class="card-title fw-bold" x-text="product.name"></h6>
                                 <p class="card-text text-primary mb-0 fw-bold">$<span x-text="parseFloat(product.price).toFixed(2)"></span></p>
+                                <div class="text-muted small mt-1">Stock: <span x-text="product.quantity"></span></div>
                             </div>
                         </div>
                     </div>
@@ -187,8 +188,16 @@
             addToCart(product) {
                 const existingItem = this.cart.find(item => item.id === product.id);
                 if (existingItem) {
+                    if (existingItem.quantity + 1 > product.quantity) {
+                        alert('Insufficient stock!');
+                        return;
+                    }
                     existingItem.quantity++;
                 } else {
+                    if (product.quantity < 1) {
+                        alert('Product is out of stock!');
+                        return;
+                    }
                     this.cart.push({ ...product, quantity: 1 });
                 }
             },
@@ -199,6 +208,13 @@
 
             updateQuantity(index, change) {
                 const item = this.cart[index];
+                const product = this.products.find(p => p.id === item.id);
+                
+                if (change > 0 && item.quantity + change > product.quantity) {
+                    alert('Insufficient stock! Only ' + product.quantity + ' available.');
+                    return;
+                }
+
                 item.quantity += change;
                 if (item.quantity <= 0) {
                     this.removeFromCart(index);
@@ -245,14 +261,14 @@
                     const result = await response.json();
                     
                     if (result.success) {
-                        alert('Order Processed Successfully!');
-                        this.resetOrder();
+                        // Redirect to the invoice page
+                        window.location.href = result.redirect;
                     } else {
-                        alert('Error processing order');
+                        alert(result.message || 'Error processing order');
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    alert('Something went wrong.');
+                    alert('Something went wrong. Please try again.');
                 } finally {
                     this.processing = false;
                 }

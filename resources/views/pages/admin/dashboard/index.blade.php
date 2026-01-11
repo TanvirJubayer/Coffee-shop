@@ -1,4 +1,4 @@
-<x-layouts.app-layout>
+﻿<x-layouts.app-layout>
                         <!-- main-content-wrap -->
                             <div class="main-content-wrap">
                                 <div class="tf-section-4 mb-30">
@@ -16,8 +16,8 @@
                                                     <i class="icon-shopping-bag"></i>
                                                 </div>
                                                 <div>
-                                                    <div class="body-text mb-2">Total Sales</div>
-                                                    <h4>${{ number_format($totalSales, 2) }}</h4>
+                                                    <div class="body-text mb-2">Today's Sales</div>
+                                                    <h4>${{ number_format($todaySales, 2) }}</h4>
                                                 </div>
                                             </div>
                                             <div class="box-icon-trending up">
@@ -44,8 +44,8 @@
                                                     <i class="icon-dollar-sign"></i>
                                                 </div>
                                                 <div>
-                                                    <div class="body-text mb-2">Total Income</div>
-                                                    <h4>${{ number_format($totalIncome, 2) }}</h4>
+                                                    <div class="body-text mb-2">Monthly Revenue</div>
+                                                    <h4>${{ number_format($monthlyRevenue, 2) }}</h4>
                                                 </div>
                                             </div>
                                             <div class="box-icon-trending down">
@@ -72,8 +72,8 @@
                                                     <i class="icon-file"></i>
                                                 </div>
                                                 <div>
-                                                    <div class="body-text mb-2">Orders Paid</div>
-                                                    <h4>{{ $ordersPaid }}</h4>
+                                                    <div class="body-text mb-2">Today's Orders</div>
+                                                    <h4>{{ $todayOrders }}</h4>
                                                 </div>
                                             </div>
                                             <div class="box-icon-trending">
@@ -768,10 +768,10 @@
                                         <div id="line-chart-6"></div>
                                     </div>
                                     <!-- /earnings -->
-                                    <!-- new-comment -->
+                                    <!-- low-stock-alerts -->
                                     <div class="wg-box">
                                         <div class="flex items-center justify-between">
-                                            <h5>New Comments</h5>
+                                            <h5>Low Stock Alerts</h5>
                                             <div class="dropdown default">
                                                 <button class="btn btn-secondary dropdown-toggle" type="button"
                                                     data-bs-toggle="dropdown" aria-haspopup="true"
@@ -781,188 +781,34 @@
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <li>
-                                                        <a href="javascript:void(0);">This Week</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:void(0);">Last Week</a>
+                                                        <a href="{{ route('inventory.index') }}">View All</a>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
                                         <ul class="flex flex-column gap20 overflow-h">
-                                            <li class="comment-item">
+                                            @forelse($lowStockProducts as $product)
+                                            <li class="product-item gap10">
                                                 <div class="image">
-                                                    <img src="{{ asset('images') }}/avatar/user-2.png"
-                                                        alt="">
+                                                    <img src="{{ asset('storage/products/' . ($product->image ?? '1.png')) }}" alt="{{ $product->name }}">
                                                 </div>
-                                                <div class="">
-                                                    <div class="mb-4 name">
-                                                        <a href="all-user.html" class="body-title-2">Kathryn
-                                                            Murphy</a>
+                                                <div class="flex-grow flex items-center justify-between gap10">
+                                                    <div class="name">
+                                                        <a href="{{ route('products.edit', $product->id) }}" class="body-title-2">{{ $product->name }}</a>
+                                                        <div class="text-tiny mt-1">SKU: {{ $product->sku }}</div>
                                                     </div>
-                                                    <div class="ratings mb-10">
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1"></i>
-                                                    </div>
-                                                    <div class="text-tiny">Lorem ipsum dolor sit amet, consectetur
-                                                        adipiscing elit. Cras nec dolor vel est interdum</div>
+                                                    <div class="body-text text-danger">{{ $product->quantity }} left</div>
+                                                </div>
+                                                <div>
+                                                    <a href="{{ route('inventory.adjust', $product->id) }}" class="btn btn-sm btn-warning">Restock</a>
                                                 </div>
                                             </li>
-                                            <li class="comment-item">
-                                                <div class="image">
-                                                    <img src="{{ asset('images') }}/avatar/user-3.png"
-                                                        alt="">
-                                                </div>
-                                                <div class="">
-                                                    <div class="mb-4 name">
-                                                        <a href="all-user.html" class="body-title-2">Leslie
-                                                            Alexander</a>
-                                                    </div>
-                                                    <div class="ratings mb-10">
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1"></i>
-                                                    </div>
-                                                    <div class="text-tiny">Cras nec viverra justo, a mattis lacus.
-                                                        Vestibulum eleifend, leo sit amet aliquam laoreet, turpis leo
-                                                        vulputate orci</div>
-                                                </div>
-                                            </li>
-                                            <li class="comment-item">
-                                                <div class="image">
-                                                    <img src="{{ asset('images') }}/avatar/user-4.png"
-                                                        alt="">
-                                                </div>
-                                                <div class="">
-                                                    <div class="mb-4 name">
-                                                        <a href="all-user.html" class="body-title-2">Devon Lane</a>
-                                                    </div>
-                                                    <div class="ratings mb-10">
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1"></i>
-                                                    </div>
-                                                    <div class="text-tiny">Morbi eget commodo diam. Praesent dignissim
-                                                        purus ac turpis porta</div>
-                                                </div>
-                                            </li>
-                                            <li class="comment-item">
-                                                <div class="image">
-                                                    <img src="{{ asset('images') }}/avatar/user-5.png"
-                                                        alt="">
-                                                </div>
-                                                <div class="">
-                                                    <div class="mb-4 name">
-                                                        <a href="all-user.html" class="body-title-2">Eleanor
-                                                            Pena</a>
-                                                    </div>
-                                                    <div class="ratings mb-10">
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1"></i>
-                                                    </div>
-                                                    <div class="text-tiny">Phasellus et eros ullamcorper, efficitur
-                                                        eros eget, pharetra ante. Sed blandit risus vitae dolor feugiat,
-                                                        eu vulputate elit rhoncus</div>
-                                                </div>
-                                            </li>
-                                            <li class="comment-item">
-                                                <div class="image">
-                                                    <img src="{{ asset('images') }}/avatar/user-2.png"
-                                                        alt="">
-                                                </div>
-                                                <div class="">
-                                                    <div class="mb-4 name">
-                                                        <a href="all-user.html" class="body-title-2">Kathryn
-                                                            Murphy</a>
-                                                    </div>
-                                                    <div class="ratings mb-10">
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1"></i>
-                                                    </div>
-                                                    <div class="text-tiny">Lorem ipsum dolor sit amet, consectetur
-                                                        adipiscing elit. Cras nec dolor vel est interdum</div>
-                                                </div>
-                                            </li>
-                                            <li class="comment-item">
-                                                <div class="image">
-                                                    <img src="{{ asset('images') }}/avatar/user-3.png"
-                                                        alt="">
-                                                </div>
-                                                <div class="">
-                                                    <div class="mb-4 name">
-                                                        <a href="all-user.html" class="body-title-2">Leslie
-                                                            Alexander</a>
-                                                    </div>
-                                                    <div class="ratings mb-10">
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1"></i>
-                                                    </div>
-                                                    <div class="text-tiny">Cras nec viverra justo, a mattis lacus.
-                                                        Vestibulum eleifend, leo sit amet aliquam laoreet, turpis leo
-                                                        vulputate orci</div>
-                                                </div>
-                                            </li>
-                                            <li class="comment-item">
-                                                <div class="image">
-                                                    <img src="{{ asset('images') }}/avatar/user-4.png"
-                                                        alt="">
-                                                </div>
-                                                <div class="">
-                                                    <div class="mb-4 name">
-                                                        <a href="all-user.html" class="body-title-2">Devon Lane</a>
-                                                    </div>
-                                                    <div class="ratings mb-10">
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1"></i>
-                                                    </div>
-                                                    <div class="text-tiny">Morbi eget commodo diam. Praesent dignissim
-                                                        purus ac turpis porta</div>
-                                                </div>
-                                            </li>
-                                            <li class="comment-item">
-                                                <div class="image">
-                                                    <img src="{{ asset('images') }}/avatar/user-5.png"
-                                                        alt="">
-                                                </div>
-                                                <div class="">
-                                                    <div class="mb-4 name">
-                                                        <a href="all-user.html" class="body-title-2">Eleanor
-                                                            Pena</a>
-                                                    </div>
-                                                    <div class="ratings mb-10">
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1 active"></i>
-                                                        <i class="icon-star1"></i>
-                                                    </div>
-                                                    <div class="text-tiny">Phasellus et eros ullamcorper, efficitur
-                                                        eros eget, pharetra ante. Sed blandit risus vitae dolor feugiat,
-                                                        eu vulputate elit rhoncus</div>
-                                                </div>
-                                            </li>
+                                            @empty
+                                            <li class="text-center text-success">No low stock alerts!</li>
+                                            @endforelse
                                         </ul>
                                     </div>
-                                    <!-- /new-comment -->
+                                    <!-- /low-stock-alerts -->
                                 </div>
                             </div>
                             <!-- /main-content-wrap -->

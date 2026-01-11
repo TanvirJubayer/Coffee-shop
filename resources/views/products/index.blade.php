@@ -67,10 +67,11 @@
                                 <div class="flex items-center justify-between gap20 flex-grow">
                                     <div class="name">
                                         <a href="#" class="body-title-2">{{ $product->name }}</a>
+                                        <div class="text-tiny mt-3">SKU: {{ $product->sku }}</div>
                                     </div>
                                     <div class="body-text">{{ number_format($product->price, 2) }}</div>
                                     <div class="body-text">{{ $product->category->name }}</div>
-                                     <div class="body-text">In Stock</div>
+                                     <div class="body-text">{{ $product->quantity }}</div>
                                     <div class="list-icon-function">
                                         <a href="{{ route('products.edit', $product->id) }}" class="item edit">
                                             <i class="icon-edit-3"></i>
