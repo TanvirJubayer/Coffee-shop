@@ -81,13 +81,8 @@
                                         </a>
                                         <ul class="sub-menu">
                                             <li class="sub-menu-item">
-                                                <a href="oder-list.html" class="">
+                                                <a href="{{ route('orders.index') }}" class="">
                                                     <div class="text">Order List</div>
-                                                </a>
-                                            </li>
-                                            <li class="sub-menu-item">
-                                                <a href="oder-detail.html" class="">
-                                                    <div class="text">Order Detail</div>
                                                 </a>
                                             </li>
                                         </ul>
@@ -99,18 +94,13 @@
                                         </a>
                                         <ul class="sub-menu">
                                             <li class="sub-menu-item">
-                                                <a href="all-user.html" class="">
+                                                <a href="{{ route('users.index') }}" class="">
                                                     <div class="text">All Staff</div>
                                                 </a>
                                             </li>
                                             <li class="sub-menu-item">
-                                                <a href="add-new-user.html" class="">
+                                                <a href="{{ route('users.create') }}" class="">
                                                     <div class="text">Add New Staff</div>
-                                                </a>
-                                            </li>
-                                            <li class="sub-menu-item">
-                                                <a href="all-roles.html" class="">
-                                                    <div class="text">Roles</div>
                                                 </a>
                                             </li>
                                         </ul>
@@ -122,7 +112,7 @@
                                         </a>
                                     </li>
                                     <li class="menu-item">
-                                        <a href="report.html" class="">
+                                        <a href="{{ route('reports.index') }}" class="">
                                             <div class="icon"><i class="icon-pie-chart"></i></div>
                                             <div class="text">Reports</div>
                                         </a>
@@ -133,7 +123,7 @@
                                 <div class="center-heading">System</div>
                                 <ul class="menu-list">
                                     <li class="menu-item">
-                                        <a href="setting.html" class="">
+                                        <a href="{{ route('settings.index') }}" class="">
                                             <div class="icon"><i class="icon-settings"></i></div>
                                             <div class="text">Settings</div>
                                         </a>

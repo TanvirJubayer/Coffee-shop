@@ -95,15 +95,41 @@
 
     <div class="divider"></div>
 
+@php
+        $taxRate = config('app.tax_rate', 10);
+        $taxAmount = $order->total_amount - ($order->total_amount / (1 + ($taxRate / 100)));
+        $subtotal = $order->total_amount - $taxAmount;
+@endphp
     <div class="totals">
         <div class="item-row">
             <span>Subtotal</span>
-            <span>{{ number_format($order->total_amount, 2) }}</span>
+            <span>{{ number_format($subtotal, 2) }}</span>
         </div>
-        <!-- Tax and Discount hooks here -->
+        <div class="item-row">
+            <span>Tax ({{ $taxRate }}%)</span>
+            <span>{{ number_format($taxAmount, 2) }}</span>
+        </div>
+        <div class="divider"></div>
         <div class="total-row">
             <span>TOTAL</span>
             <span>{{ number_format($order->total_amount, 2) }}</span>
+        </div>
+        
+        @php
+            $payment = $order->payments->first();
+            $paidAmount = $payment ? $payment->amount : $order->total_amount;
+            $change = $paidAmount - $order->total_amount;
+        @endphp
+
+        <div class="divider"></div>
+        
+        <div class="item-row">
+            <span>Amount Paid</span>
+            <span>{{ number_format($paidAmount, 2) }}</span>
+        </div>
+        <div class="item-row">
+            <span>Change</span>
+            <span>{{ number_format($change, 2) }}</span>
         </div>
     </div>
 

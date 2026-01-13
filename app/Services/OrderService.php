@@ -69,9 +69,10 @@ class OrderService
             }
 
             // 3. Create Payment Record
+            $paymentAmount = ($data['payment_method'] === 'cash') ? $data['amount_received'] : $data['total_amount'];
             Payment::create([
                 'order_id' => $order->id,
-                'amount' => $data['total_amount'],
+                'amount' => $paymentAmount,
                 'payment_method' => $data['payment_method'],
                 'status' => 'completed',
             ]);

@@ -65,4 +65,8 @@ class RestaurantTableController extends Controller
 
         return back()->with('success', 'Table status updated successfully.');
     }
+    public function show(RestaurantTable $table)
+    {
+        return redirect()->route('tables.index');
+    }
 }

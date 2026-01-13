@@ -24,6 +24,12 @@ Route::get('/inventory/history', [App\Http\Controllers\InventoryController::clas
 Route::get('/inventory/adjust/{product}', [App\Http\Controllers\InventoryController::class, 'adjust'])->name('inventory.adjust');
 Route::put('/inventory/update/{product}', [App\Http\Controllers\InventoryController::class, 'update'])->name('inventory.update');
 
+// Management Routes
+Route::resource('orders', App\Http\Controllers\OrderController::class)->only(['index', 'show']);
+Route::resource('users', App\Http\Controllers\UserController::class);
+Route::get('/reports', [App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
+Route::get('/settings', [App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');
+
 // POS Routes
 Route::middleware('auth')->group(function () {
     Route::get('/pos', [App\Http\Controllers\PosController::class, 'index'])->name('pos.index');
