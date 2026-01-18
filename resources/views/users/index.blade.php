@@ -27,9 +27,24 @@
                             <div class="flex items-center justify-between gap20 flex-grow">
                                 <div class="body-text">{{ $user->name }}</div>
                                 <div class="body-text">{{ $user->email }}</div>
-                                <div class="body-text">{{ $user->role ?? 'Staff' }}</div>
+                                <div class="body-text">
+                                    <span class="badge {{ $user->role == 'admin' ? 'bg-danger' : ($user->role == 'manager' ? 'bg-warning text-dark' : 'bg-success') }}">
+                                        {{ ucfirst($user->role ?? 'staff') }}
+                                    </span>
+                                </div>
                                 <div class="list-icon-function">
-                                    <a href="#" class="item edit"><i class="icon-edit-3"></i></a>
+                                    <a href="{{ route('users.edit', $user) }}" class="item edit" title="Edit">
+                                        <i class="icon-edit-3"></i>
+                                    </a>
+                                    @if(auth()->id() !== $user->id)
+                                    <form action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="item trash border-0 bg-transparent p-0" title="Delete">
+                                            <i class="icon-trash-2"></i>
+                                        </button>
+                                    </form>
+                                    @endif
                                 </div>
                             </div>
                         </li>

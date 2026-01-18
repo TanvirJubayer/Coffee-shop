@@ -23,12 +23,30 @@ Route::get('/inventory', [App\Http\Controllers\InventoryController::class, 'inde
 Route::get('/inventory/history', [App\Http\Controllers\InventoryController::class, 'history'])->name('inventory.history');
 Route::get('/inventory/adjust/{product}', [App\Http\Controllers\InventoryController::class, 'adjust'])->name('inventory.adjust');
 Route::put('/inventory/update/{product}', [App\Http\Controllers\InventoryController::class, 'update'])->name('inventory.update');
+Route::resource('ingredients', App\Http\Controllers\IngredientController::class);
+Route::resource('purchases', App\Http\Controllers\PurchaseController::class);
 
 // Management Routes
 Route::resource('orders', App\Http\Controllers\OrderController::class)->only(['index', 'show']);
+Route::patch('/orders/{order}/status', [App\Http\Controllers\OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+Route::post('/orders/{order}/cancel', [App\Http\Controllers\OrderController::class, 'cancel'])->name('orders.cancel');
 Route::resource('users', App\Http\Controllers\UserController::class);
-Route::get('/reports', [App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
+Route::resource('discounts', App\Http\Controllers\DiscountController::class);
+Route::post('/discounts/verify', [App\Http\Controllers\DiscountController::class, 'verify'])->name('discounts.verify');
+
+
+// Reports Routes
+Route::prefix('reports')->group(function () {
+    Route::get('/', [App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
+    Route::get('/sales', [App\Http\Controllers\ReportController::class, 'sales'])->name('reports.sales');
+    Route::get('/products', [App\Http\Controllers\ReportController::class, 'products'])->name('reports.products');
+    Route::get('/staff', [App\Http\Controllers\ReportController::class, 'staff'])->name('reports.staff');
+    Route::get('/inventory', [App\Http\Controllers\ReportController::class, 'inventory'])->name('reports.inventory');
+    Route::get('/export/{type}', [App\Http\Controllers\ReportController::class, 'export'])->name('reports.export');
+});
+
 Route::get('/settings', [App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');
+Route::post('/settings', [App\Http\Controllers\SettingController::class, 'update'])->name('settings.update');
 
 // POS Routes
 Route::middleware('auth')->group(function () {

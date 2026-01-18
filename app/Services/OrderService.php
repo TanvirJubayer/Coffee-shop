@@ -25,12 +25,14 @@ class OrderService
         return DB::transaction(function () use ($data) {
             // 1. Create Order
             $order = Order::create([
-                'user_id' => auth()->id() ?? null, // Nullable for guest/kiosk mode if needed
+                'user_id' => auth()->id() ?? null,
                 'table_id' => $data['table_id'] ?? null,
                 'total_amount' => $data['total_amount'],
-                'status' => 'completed', // Direct complete for POS
+                'discount_amount' => $data['discount_amount'] ?? 0,
+                'status' => 'completed',
                 'type' => $data['order_type'],
-                // Add tax/discount fields if schema supports them later
+                'customer_name' => $data['customer_name'] ?? null,
+                'notes' => $data['notes'] ?? null,
             ]);
 
             // 2. Process Items
@@ -49,7 +51,7 @@ class OrderService
                 $order->items()->create([
                     'product_id' => $product->id,
                     'quantity' => $item['quantity'],
-                    'price' => $item['price'], // Price at time of sale
+                    'price' => $item['price'],
                     'notes' => $item['notes'] ?? null,
                 ]);
 
@@ -62,17 +64,17 @@ class OrderService
                     'product_id' => $product->id,
                     'user_id' => auth()->id() ?? null,
                     'type' => 'sale',
-                    'quantity' => -$item['quantity'], // Negative for deduction
+                    'quantity' => -$item['quantity'],
                     'balance' => $newQuantity,
                     'notes' => "Order #{$order->id}",
                 ]);
             }
 
-            // 3. Create Payment Record
-            $paymentAmount = ($data['payment_method'] === 'cash') ? $data['amount_received'] : $data['total_amount'];
+            // 3. Create Payment Record (Amount is the actual cost, not tendered)
             Payment::create([
                 'order_id' => $order->id,
-                'amount' => $paymentAmount,
+                'amount' => $data['total_amount'], 
+                'tendered_amount' => $data['amount_received'] ?? $data['total_amount'],
                 'payment_method' => $data['payment_method'],
                 'status' => 'completed',
             ]);

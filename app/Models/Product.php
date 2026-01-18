@@ -23,6 +23,31 @@ class Product extends Model
         'alert_threshold'
     ];
 
+    /**
+     * The accessors to append to the model's array form.
+     */
+    protected $appends = ['image_url'];
+
+    /**
+     * Get the full URL for the product image.
+     * This accessor ensures images work even when project is moved.
+     */
+    public function getImageUrlAttribute(): string
+    {
+        if (!$this->image) {
+            return asset('images/placeholder.svg');
+        }
+        
+        // Check if storage link exists and file exists
+        $storagePath = storage_path('app/public/products/' . $this->image);
+        if (file_exists($storagePath)) {
+            return asset('storage/products/' . $this->image);
+        }
+        
+        // Fallback to placeholder if image not found
+        return asset('images/placeholder.svg');
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

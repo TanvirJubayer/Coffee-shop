@@ -80,6 +80,12 @@
         <p>Date: {{ $order->created_at->format('Y-m-d H:i') }}</p>
         <p>Order #: {{ $order->id }}</p>
         <p>Cashier: {{ $order->user->name ?? 'Guest' }}</p>
+        @if($order->customer_name)
+        <p>Customer: {{ $order->customer_name }}</p>
+        @endif
+        @if($order->table_id)
+        <p>Table: {{ $order->table->name ?? 'Table' }}</p>
+        @endif
     </div>
 
     <div class="divider"></div>
@@ -96,15 +102,35 @@
     <div class="divider"></div>
 
 @php
+        $grossTotal = $order->items->sum(function($item) {
+            return $item->price * $item->quantity;
+        });
+        
+        $discount = $order->discount_amount ?? 0;
+        
+        // Assuming Tax is included in the stored total_amount
+        // And total_amount = (Gross - Discount)
+        // Wait, normally total_amount IS the final amount.
+        // Let's rely on stored total_amount.
+        
+        $finalTotal = $order->total_amount;
+        
+        // Back-calculate Tax
         $taxRate = config('app.tax_rate', 10);
-        $taxAmount = $order->total_amount - ($order->total_amount / (1 + ($taxRate / 100)));
-        $subtotal = $order->total_amount - $taxAmount;
+        $taxAmount = $finalTotal - ($finalTotal / (1 + ($taxRate / 100)));
+        $netTotal = $finalTotal - $taxAmount;
 @endphp
     <div class="totals">
         <div class="item-row">
             <span>Subtotal</span>
-            <span>{{ number_format($subtotal, 2) }}</span>
+            <span>{{ number_format($grossTotal, 2) }}</span>
         </div>
+        @if($discount > 0)
+        <div class="item-row">
+            <span>Discount</span>
+            <span>-{{ number_format($discount, 2) }}</span>
+        </div>
+        @endif
         <div class="item-row">
             <span>Tax ({{ $taxRate }}%)</span>
             <span>{{ number_format($taxAmount, 2) }}</span>
@@ -112,19 +138,24 @@
         <div class="divider"></div>
         <div class="total-row">
             <span>TOTAL</span>
-            <span>{{ number_format($order->total_amount, 2) }}</span>
+            <span>{{ number_format($finalTotal, 2) }}</span>
         </div>
         
-        @php
-            $payment = $order->payments->first();
-            $paidAmount = $payment ? $payment->amount : $order->total_amount;
-            $change = $paidAmount - $order->total_amount;
-        @endphp
+        @if($order->notes)
+        <div class="divider"></div>
+        <p style="font-size: 12px; font-style: italic;">Note: {{ $order->notes }}</p>
+        @endif
 
         <div class="divider"></div>
         
+        @php
+            $payment = $order->payments->first();
+            $paidAmount = $payment ? ($payment->tendered_amount ?? $payment->amount) : $finalTotal;
+            $change = max(0, $paidAmount - $finalTotal);
+        @endphp
+        
         <div class="item-row">
-            <span>Amount Paid</span>
+            <span>Paid Amount</span>
             <span>{{ number_format($paidAmount, 2) }}</span>
         </div>
         <div class="item-row">

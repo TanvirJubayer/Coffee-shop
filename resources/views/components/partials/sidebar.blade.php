@@ -68,6 +68,16 @@
                                                 </a>
                                             </li>
                                             <li class="sub-menu-item">
+                                                <a href="{{ route('purchases.index') }}" class="">
+                                                    <div class="text">Purchases</div>
+                                                </a>
+                                            </li>
+                                            <li class="sub-menu-item">
+                                                <a href="{{ route('ingredients.index') }}" class="">
+                                                    <div class="text">Raw Materials</div>
+                                                </a>
+                                            </li>
+                                            <li class="sub-menu-item">
                                                 <a href="{{ route('suppliers.index') }}" class="">
                                                     <div class="text">Suppliers</div>
                                                 </a>
@@ -109,6 +119,12 @@
                                         <a href="{{ route('tables.index') }}" class="">
                                             <div class="icon"><i class="icon-grid"></i></div>
                                             <div class="text">Tables Management</div>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="{{ route('discounts.index') }}" class="">
+                                            <div class="icon"><i class="icon-file-text"></i></div>
+                                            <div class="text">Coupons</div>
                                         </a>
                                     </li>
                                     <li class="menu-item">

@@ -5,20 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class InventoryTransaction extends Model
+class PurchaseItem extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'purchase_id',
         'product_id',
         'ingredient_id',
-        'supplier_id',
-        'user_id',
-        'type',
         'quantity',
-        'balance',
-        'notes'
+        'unit_cost',
+        'subtotal',
     ];
+
+    public function purchase()
+    {
+        return $this->belongsTo(Purchase::class);
+    }
 
     public function product()
     {
@@ -28,15 +31,5 @@ class InventoryTransaction extends Model
     public function ingredient()
     {
         return $this->belongsTo(Ingredient::class);
-    }
-
-    public function supplier()
-    {
-        return $this->belongsTo(Supplier::class);
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 }

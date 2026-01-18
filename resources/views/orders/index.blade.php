@@ -31,7 +31,12 @@
                                 </div>
                                 <div class="body-text">{{ $order->created_at->format('Y-m-d H:i') }}</div>
                                 <div class="list-icon-function">
-                                    <a href="{{ route('pos.invoice', $order->id) }}" class="item" target="_blank"><i class="icon-eye"></i></a>
+                                    <a href="{{ route('orders.show', $order) }}" class="item" title="View Details">
+                                        <i class="icon-file-text"></i>
+                                    </a>
+                                    <a href="{{ route('pos.invoice', $order->id) }}" class="item" target="_blank" title="Print Invoice">
+                                        <i class="icon-printer"></i>
+                                    </a>
                                 </div>
                             </div>
                         </li>

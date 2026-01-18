@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             CoffeeSeeder::class,
+            TableSeeder::class,
         ]);
     }
 }

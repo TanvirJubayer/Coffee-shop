@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <rect width="200" height="200" fill="#f0f0f0"/>
+  <g fill="#c0c0c0">
+    <path d="M100 40c-22 0-40 18-40 40v30h-10v10c0 22 18 40 40 40h20c22 0 40-18 40-40v-10h-10V80c0-22-18-40-40-40zm30 70v10c0 17-13 30-30 30H80c-17 0-30-13-30-30v0h80zm10-10H60V80c0-22 18-40 40-40s40 18 40 40v20z"/>
+    <rect x="150" y="70" width="20" height="30" rx="5"/>
+  </g>
+  <text x="100" y="175" font-family="Arial, sans-serif" font-size="12" fill="#888" text-anchor="middle">No Image</text>
+</svg>
