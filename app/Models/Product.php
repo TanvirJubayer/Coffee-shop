@@ -43,6 +43,12 @@ class Product extends Model
         if (file_exists($storagePath)) {
             return asset('storage/products/' . $this->image);
         }
+
+        // Check if file exists in public/images/products
+        $publicPath = public_path('images/products/' . $this->image);
+        if (file_exists($publicPath)) {
+            return asset('images/products/' . $this->image);
+        }
         
         // Fallback to placeholder if image not found
         return asset('images/placeholder.svg');
