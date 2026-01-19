@@ -111,7 +111,14 @@
                         <select class="form-select form-select-sm" x-model="selectedTable">
                             <option value="">Select Table</option>
                             @foreach($tables as $table)
-                                <option value="{{ $table->id }}">{{ $table->name }} ({{ $table->capacity }})</option>
+                                <option value="{{ $table->id }}" 
+                                    {{ $table->status !== 'available' ? 'disabled' : '' }}
+                                    class="{{ $table->status !== 'available' ? 'text-muted' : '' }}">
+                                    {{ $table->name }} ({{ $table->capacity }} Persons)
+                                    @if($table->status !== 'available')
+                                         - [{{ ucfirst($table->status) }}]
+                                    @endif
+                                </option>
                             @endforeach
                         </select>
                     </div>

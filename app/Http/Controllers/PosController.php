@@ -27,7 +27,7 @@ class PosController extends Controller
         }])->get();
         
         $products = Product::where('status', true)->get();
-        $tables = RestaurantTable::where('status', '!=', 'occupied')->get(); 
+        $tables = RestaurantTable::all(); 
 
         return view('pos.index', compact('categories', 'products', 'tables'));
     }
@@ -42,6 +42,16 @@ class PosController extends Controller
             'order_type' => 'required|in:dine_in,takeaway',
             'table_id' => 'required_if:order_type,dine_in|nullable|exists:restaurant_tables,id',
         ]);
+
+        if ($request->order_type === 'dine_in' && $request->table_id) {
+            $table = RestaurantTable::find($request->table_id);
+            if ($table && $table->status !== 'available') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'This table is already ' . $table->status . '. Please select another table.'
+                ], 422);
+            }
+        }
 
         try {
             $order = $this->orderService->createOrder($request->all());
