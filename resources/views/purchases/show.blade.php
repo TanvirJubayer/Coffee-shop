@@ -8,57 +8,70 @@
                     <li><i class="icon-chevron-right"></i></li>
                     <li><a href="{{ route('purchases.index') }}"><div class="text-tiny">Purchases</div></a></li>
                     <li><i class="icon-chevron-right"></i></li>
-                    <li><div class="text-tiny">Details</div></li>
+                    <li><div class="text-tiny">#{{ $purchase->reference_no }}</div></li>
                 </ul>
             </div>
 
             <div class="wg-box">
-                <div class="row mb-30">
-                    <div class="col-md-6">
-                        <h5 class="mb-10">Purchase Info</h5>
-                        <p><strong>Date:</strong> {{ $purchase->purchase_date->format('Y-m-d') }}</p>
-                        <p><strong>Reference:</strong> {{ $purchase->reference_no ?? '-' }}</p>
-                        <p><strong>Status:</strong> <span class="badge {{ $purchase->status == 'received' ? 'bg-success' : 'bg-warning' }}">{{ ucfirst($purchase->status) }}</span></p>
+                <div class="flex items-center justify-between mb-30">
+                    <div>
+                        <h4>Reference: {{ $purchase->reference_no }}</h4>
+                        <div class="text-tiny mt-1">Date: {{ $purchase->purchase_date->format('F d, Y') }}</div>
+                        <div class="text-tiny mt-1">Status: <span class="badge {{ $purchase->status === 'received' ? 'bg-success' : 'bg-warning' }}">{{ ucfirst($purchase->status) }}</span></div>
                     </div>
-                    <div class="col-md-6">
-                        <h5 class="mb-10">Supplier Info</h5>
-                        <p><strong>Name:</strong> {{ $purchase->supplier->name ?? 'Unknown' }}</p>
-                        <p><strong>Contact:</strong> {{ $purchase->supplier->contact_person ?? '-' }}</p>
-                        <p><strong>Phone:</strong> {{ $purchase->supplier->phone ?? '-' }}</p>
+                    <div class="text-end">
+                        <h4>Supplier: {{ $purchase->supplier->name }}</h4>
+                        <div class="text-tiny mt-1">Contact: {{ $purchase->supplier->contact_person ?? 'N/A' }}</div>
+                        <div class="text-tiny mt-1">Phone: {{ $purchase->supplier->phone ?? 'N/A' }}</div>
+                        <a href="{{ route('purchases.voucher', $purchase) }}" target="_blank" class="tf-button style-1 mt-3">
+                            <i class="icon-printer"></i> Generate Voucher
+                        </a>
                     </div>
                 </div>
 
-                <div class="wg-table table-product-list">
-                    <ul class="table-title flex gap20 mb-14">
-                        <li><div class="body-title">Item</div></li>
-                        <li><div class="body-title">Type</div></li>
-                        <li><div class="body-title">Quantity</div></li>
-                        <li><div class="body-title">Unit Cost</div></li>
-                        <li><div class="body-title">Subtotal</div></li>
-                    </ul>
-                    <ul class="table-list">
-                        @foreach($purchase->items as $item)
-                        <li class="product-item gap14">
-                            <div class="flex items-center justify-between gap20 flex-grow">
-                                <div class="body-text fw-bold">
-                                    {{ $item->product ? $item->product->name : ($item->ingredient ? $item->ingredient->name : 'Unknown') }}
-                                </div>
-                                <div class="body-text">{{ $item->product ? 'Product' : 'Ingredient' }}</div>
-                                <div class="body-text">{{ $item->quantity }}</div>
-                                <div class="body-text">${{ number_format($item->unit_cost, 2) }}</div>
-                                <div class="body-text fw-bold">${{ number_format($item->subtotal, 2) }}</div>
-                            </div>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-                
-                <div class="flex justify-end mt-20">
-                    <h4>Total Amount: ${{ number_format($purchase->total_amount, 2) }}</h4>
-                </div>
-
-                <div class="bot mt-20">
-                    <a href="{{ route('purchases.index') }}" class="tf-button style-1">Back to List</a>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Type</th>
+                                <th class="text-center">Quantity</th>
+                                <th class="text-end">Unit Cost</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($purchase->items as $item)
+                                <tr>
+                                    <td>
+                                        @if($item->product)
+                                            {{ $item->product->name }}
+                                        @elseif($item->ingredient)
+                                            {{ $item->ingredient->name }}
+                                        @else
+                                            Unknown Item
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($item->product)
+                                            <span class="badge bg-primary">Product</span>
+                                        @elseif($item->ingredient)
+                                            <span class="badge bg-secondary">Ingredient</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">{{ $item->quantity }}</td>
+                                    <td class="text-end">${{ number_format($item->unit_cost, 2) }}</td>
+                                    <td class="text-end">${{ number_format($item->subtotal, 2) }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" class="text-end fw-bold">Grand Total</td>
+                                <td class="text-end fw-bold">${{ number_format($purchase->total_amount, 2) }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
             </div>
         </div>

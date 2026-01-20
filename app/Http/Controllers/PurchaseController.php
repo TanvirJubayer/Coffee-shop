@@ -117,4 +117,9 @@ class PurchaseController extends Controller
         $purchase->load(['supplier', 'items.product', 'items.ingredient']);
         return view('purchases.show', compact('purchase'));
     }
+    public function voucher(Purchase $purchase)
+    {
+        $purchase->load(['supplier', 'items.product', 'items.ingredient']);
+        return view('purchases.voucher', compact('purchase'));
+    }
 }

@@ -102,28 +102,23 @@
     <div class="divider"></div>
 
 @php
-        $grossTotal = $order->items->sum(function($item) {
+        $subtotal = $order->items->sum(function($item) {
             return $item->price * $item->quantity;
         });
         
         $discount = $order->discount_amount ?? 0;
         
-        // Assuming Tax is included in the stored total_amount
-        // And total_amount = (Gross - Discount)
-        // Wait, normally total_amount IS the final amount.
-        // Let's rely on stored total_amount.
-        
-        $finalTotal = $order->total_amount;
-        
-        // Back-calculate Tax
+        // Recalculate Tax based on (Subtotal - Discount)
         $taxRate = config('app.tax_rate', 10);
-        $taxAmount = $finalTotal - ($finalTotal / (1 + ($taxRate / 100)));
-        $netTotal = $finalTotal - $taxAmount;
+        $taxableAmount = max(0, $subtotal - $discount);
+        $taxAmount = $taxableAmount * ($taxRate / 100);
+        
+        $finalTotal = $taxableAmount + $taxAmount;
 @endphp
     <div class="totals">
         <div class="item-row">
             <span>Subtotal</span>
-            <span>{{ number_format($grossTotal, 2) }}</span>
+            <span>{{ number_format($subtotal, 2) }}</span>
         </div>
         @if($discount > 0)
         <div class="item-row">

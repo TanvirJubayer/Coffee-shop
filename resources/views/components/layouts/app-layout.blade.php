@@ -22,6 +22,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css') }}/bootstrap-select.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('css') }}/style.css">
 
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
 
 
     <!-- Font -->

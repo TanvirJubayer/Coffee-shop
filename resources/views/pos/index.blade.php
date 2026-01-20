@@ -178,10 +178,18 @@
                 <textarea class="form-control form-control-sm" x-model="orderNotes" rows="2" placeholder="Order notes / special instructions..."></textarea>
             </div>
 
-            <!-- Manual Discount -->
+            <!-- Coupon Code -->
             <div class="px-3 pb-2" x-show="cart.length > 0">
-                <label class="form-label small mb-1">Manual Discount ($)</label>
-                <input type="number" class="form-control form-control-sm" x-model.number="discountAmount" placeholder="0.00" step="0.01" min="0">
+                <label class="form-label small mb-1">Coupon Code</label>
+                <div class="input-group input-group-sm flex-nowrap">
+                    <input type="text" class="form-control" x-model="discountCode" placeholder="Enter code" :disabled="discountAmount > 0" @keydown.enter="applyCoupon">
+                    <button class="btn btn-outline-secondary" type="button" @click="applyCoupon" x-show="discountAmount === 0" :disabled="!discountCode || processing">
+                        <span x-show="processing" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span x-show="!processing">Apply</span>
+                    </button>
+                    <button class="btn btn-outline-danger" type="button" @click="removeCoupon" x-show="discountAmount > 0">Remove</button>
+                </div>
+                <div class="small mt-1" :class="discountMessage.includes('successfully') ? 'text-success' : 'text-danger'" x-text="discountMessage" x-show="discountMessage" x-transition></div>
             </div>
 
             <!-- Totals & Checkout -->
@@ -374,6 +382,7 @@
             orderNotes: '',
             discountCode: '',
             discountAmount: 0,
+            discountMessage: '',
             showPaymentModal: false,
             showMobileCart: false,
             showHeldOrders: false,
@@ -506,6 +515,46 @@
                     return this.amountReceived >= this.total;
                 }
                 return true; // Card and mobile don't require amount input
+            },
+
+            applyCoupon() {
+                this.discountMessage = '';
+                if (!this.discountCode) return;
+
+                fetch('{{ route('discounts.verify') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        code: this.discountCode,
+                        total: this.subtotal
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.valid) {
+                        this.discountAmount = parseFloat(data.amount);
+                        this.discountMessage = data.message;
+                        this.showToast('Coupon applied successfully', 'success');
+                    } else {
+                        this.discountAmount = 0;
+                        this.discountMessage = data.message;
+                        this.showToast(data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    this.showToast('Error applying coupon', 'error');
+                });
+            },
+
+            removeCoupon() {
+                this.discountCode = '';
+                this.discountAmount = 0;
+                this.discountMessage = '';
+                this.showToast('Coupon removed', 'info');
             },
 
             async processPayment() {

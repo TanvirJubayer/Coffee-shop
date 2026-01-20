@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="wg-box">
-                    <div class="flex items-center justify-between mb-20">
+                    <div class="flex items-center justify-between flex-wrap gap10 mb-20">
                         <h4>Purchase Items</h4>
                         <button type="button" class="tf-button style-1" @click="addItem()">
                             <i class="icon-plus"></i> Add Item
@@ -51,32 +51,32 @@
                     </div>
                     
                     <div class="table-responsive">
-                        <table class="table">
+                        <table class="table" style="min-width: 800px;">
                             <thead>
                                 <tr>
-                                    <th>Type</th>
-                                    <th>Item</th>
-                                    <th>Quantity</th>
-                                    <th>Unit Cost</th>
-                                    <th>Subtotal</th>
-                                    <th>Action</th>
+                                    <th style="width: 20%;">Type</th>
+                                    <th style="width: 30%;">Item</th>
+                                    <th style="width: 15%;">Quantity</th>
+                                    <th style="width: 15%;">Unit Cost</th>
+                                    <th style="width: 15%;">Subtotal</th>
+                                    <th style="width: 5%;">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="tf-table-body">
                                 <template x-for="(item, index) in items" :key="index">
-                                    <tr>
-                                        <td>
+                                    <tr class="align-middle">
+                                        <td class="p-2">
                                             <div class="select">
-                                                <select :name="'items['+index+'][type]'" x-model="item.type" required>
+                                                <select :name="'items['+index+'][type]'" x-model="item.type" @change="item.item_id = ''" required class="form-select w-100">
                                                     <option value="ingredient">Ingredient (Raw)</option>
                                                     <option value="product">Product (Sellable)</option>
                                                 </select>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="p-2">
                                             <template x-if="item.type === 'ingredient'">
                                                 <div class="select">
-                                                    <select :name="'items['+index+'][item_id]'" x-model="item.item_id" required>
+                                                    <select :name="'items['+index+'][item_id]'" x-model="item.item_id" @change="updateCost(index)" required class="form-select w-100">
                                                         <option value="">Select Ingredient</option>
                                                         @foreach($ingredients as $ing)
                                                             <option value="{{ $ing->id }}">{{ $ing->name }} ({{ $ing->unit }})</option>
@@ -86,7 +86,7 @@
                                             </template>
                                             <template x-if="item.type === 'product'">
                                                 <div class="select">
-                                                    <select :name="'items['+index+'][item_id]'" x-model="item.item_id" required>
+                                                    <select :name="'items['+index+'][item_id]'" x-model="item.item_id" @change="updateCost(index)" required class="form-select w-100">
                                                         <option value="">Select Product</option>
                                                         @foreach($products as $prod)
                                                             <option value="{{ $prod->id }}">{{ $prod->name }}</option>
@@ -95,17 +95,17 @@
                                                 </div>
                                             </template>
                                         </td>
-                                        <td>
-                                            <input type="number" step="0.01" :name="'items['+index+'][quantity]'" x-model="item.quantity" @input="calculateTotal(index)" class="form-control" placeholder="Qty" required>
+                                        <td class="p-2">
+                                            <input type="number" step="0.01" :name="'items['+index+'][quantity]'" x-model="item.quantity" class="form-control w-100" placeholder="Qty" required>
                                         </td>
-                                        <td>
-                                            <input type="number" step="0.01" :name="'items['+index+'][unit_cost]'" x-model="item.unit_cost" @input="calculateTotal(index)" class="form-control" placeholder="Cost" required>
+                                        <td class="p-2">
+                                            <input type="number" step="0.01" :name="'items['+index+'][unit_cost]'" x-model="item.unit_cost" class="form-control w-100" placeholder="Cost" required>
                                         </td>
-                                        <td>
-                                            $<span x-text="(item.quantity * item.unit_cost).toFixed(2)"></span>
+                                        <td class="p-2 fw-bold">
+                                            $<span x-text="(parseFloat(item.quantity || 0) * parseFloat(item.unit_cost || 0)).toFixed(2)"></span>
                                         </td>
-                                        <td>
-                                            <button type="button" class="item trash" @click="removeItem(index)">
+                                        <td class="p-2 text-center">
+                                            <button type="button" class="btn btn-sm btn-outline-danger" @click="removeItem(index)">
                                                 <i class="icon-trash-2"></i>
                                             </button>
                                         </td>
@@ -131,13 +131,15 @@
     </div>
 
     <script>
-        function purchaseForm() {
-            return {
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('purchaseForm', () => ({
                 items: [
                     { type: 'ingredient', item_id: '', quantity: 1, unit_cost: 0 }
                 ],
+                ingredientsData: @json($ingredients),
+                productsData: @json($products),
                 get grandTotal() {
-                    return this.items.reduce((sum, item) => sum + (item.quantity * item.unit_cost), 0);
+                    return this.items.reduce((sum, item) => sum + (parseFloat(item.quantity || 0) * parseFloat(item.unit_cost || 0)), 0);
                 },
                 addItem() {
                     this.items.push({ type: 'ingredient', item_id: '', quantity: 1, unit_cost: 0 });
@@ -147,10 +149,26 @@
                         this.items = this.items.filter((_, i) => i !== index);
                     }
                 },
-                calculateTotal(index) {
-                    // Logic handled by x-text and computed getter
+                updateCost(index) {
+                    let item = this.items[index];
+                    if (!item.item_id) return;
+
+                    if (item.type === 'ingredient') {
+                        let ing = this.ingredientsData.find(i => i.id == item.item_id);
+                        if (ing) {
+                             // Assuming 'cost' or 'alert_threshold' isn't the cost. Migration said 'cost'.
+                             // Ingredient migration: cost. Seeder didn't set cost, so it's 0. 
+                             // I should update seeder? No, let's use what we have. Default is 0.
+                             item.unit_cost = ing.cost || 0; 
+                        }
+                    } else if (item.type === 'product') {
+                        let prod = this.productsData.find(p => p.id == item.item_id);
+                        if (prod) {
+                            item.unit_cost = prod.cost || 0;
+                        }
+                    }
                 }
-            }
-        }
+            }));
+        });
     </script>
 </x-layouts.app-layout>

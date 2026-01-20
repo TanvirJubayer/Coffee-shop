@@ -26,8 +26,25 @@ class DashboardController extends Controller
         // 3. Total Orders Today
         $todayOrders = Order::whereDate('created_at', Carbon::today())->count();
         
-        // 4. Low Stock Alerts
-        $lowStockProducts = \App\Models\Product::whereColumn('quantity', '<=', 'alert_threshold')
+        // 4. Average Order Value (Today)
+        $averageOrderValue = $todayOrders > 0 ? $todaySales / $todayOrders : 0;
+        
+        // Daily Report Data
+        $dailyTopProduct = OrderItem::select('product_id', DB::raw('SUM(quantity) as total_sold'))
+            ->whereDate('created_at', Carbon::today())
+            ->groupBy('product_id')
+            ->orderBy('total_sold', 'desc')
+            ->with('product')
+            ->first();
+
+        // 4. Low Stock Alerts (Keep existing logic or improve as needed)
+        // Ingredients
+        $lowStockIngredients = \App\Models\Ingredient::whereColumn('quantity', '<=', 'alert_threshold')
+             ->take(5)
+             ->get();
+
+        // Products (Default threshold 10 for now since no column)
+        $lowStockProducts = \App\Models\Product::where('quantity', '<=', 10)
             ->where('status', true)
             ->take(5)
             ->get();
@@ -70,7 +87,8 @@ class DashboardController extends Controller
         return view("pages.admin.dashboard.index", compact(
             'todaySales', 'monthlyRevenue', 'todayOrders', 'lowStockProducts',
             'totalSales', 'profit', 'ordersPaid', 'totalVisitor', 
-            'recentOrders', 'dates', 'sales', 'topProducts'
+            'recentOrders', 'dates', 'sales', 'topProducts',
+            'dailyTopProduct', 'chartData', 'averageOrderValue'
         ));
     }
 }

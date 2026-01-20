@@ -82,7 +82,9 @@
                             <h5>Daily Sales</h5>
                             <a href="{{ route('reports.sales', ['start_date' => $startDate, 'end_date' => $endDate]) }}" class="text-primary">View Details →</a>
                         </div>
-                        <canvas id="dailySalesChart" height="300"></canvas>
+                        <div style="height: 300px; position: relative;">
+                            <canvas id="dailySalesChart"></canvas>
+                        </div>
                     </div>
                 </div>
 
@@ -90,7 +92,9 @@
                 <div class="col-lg-4 mb-3">
                     <div class="wg-box">
                         <h5 class="mb-3">Payment Methods</h5>
-                        <canvas id="paymentChart" height="300"></canvas>
+                        <div style="height: 300px; position: relative;">
+                            <canvas id="paymentChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -100,32 +104,34 @@
                 <!-- Top Products -->
                 <div class="col-lg-6 mb-3">
                     <div class="wg-box">
-                        <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center justify-between mb-3 flex-wrap gap10">
                             <h5>Top 5 Products</h5>
                             <a href="{{ route('reports.products', ['start_date' => $startDate, 'end_date' => $endDate]) }}" class="text-primary">View All →</a>
                         </div>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th class="text-center">Qty Sold</th>
-                                    <th class="text-end">Revenue</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($topProducts as $item)
-                                <tr>
-                                    <td>{{ $item->product->name ?? 'N/A' }}</td>
-                                    <td class="text-center">{{ $item->total_qty }}</td>
-                                    <td class="text-end">${{ number_format($item->total_revenue, 2) }}</td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="3" class="text-center text-muted">No data available</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table" style="min-width: 400px;">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th class="text-center">Qty Sold</th>
+                                        <th class="text-end">Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($topProducts as $item)
+                                    <tr>
+                                        <td>{{ $item->product->name ?? 'N/A' }}</td>
+                                        <td class="text-center">{{ $item->total_qty }}</td>
+                                        <td class="text-end">${{ number_format($item->total_revenue, 2) }}</td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">No data available</td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 

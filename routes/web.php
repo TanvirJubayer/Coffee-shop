@@ -25,6 +25,7 @@ Route::get('/inventory/adjust/{product}', [App\Http\Controllers\InventoryControl
 Route::put('/inventory/update/{product}', [App\Http\Controllers\InventoryController::class, 'update'])->name('inventory.update');
 Route::resource('ingredients', App\Http\Controllers\IngredientController::class);
 Route::resource('purchases', App\Http\Controllers\PurchaseController::class);
+Route::get('/purchases/{purchase}/voucher', [App\Http\Controllers\PurchaseController::class, 'voucher'])->name('purchases.voucher');
 
 // Management Routes
 Route::resource('orders', App\Http\Controllers\OrderController::class)->only(['index', 'show']);

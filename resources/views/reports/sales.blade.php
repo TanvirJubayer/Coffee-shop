@@ -46,19 +46,19 @@
             <!-- Summary -->
             <div class="row mb-4">
                 <div class="col-md-4 mb-3">
-                    <div class="wg-box p-4 text-center bg-success bg-opacity-10">
+                    <div class="wg-box p-4 text-center bg-white shadow-sm border-start border-4 border-success">
                         <div class="text-muted mb-2">Total Sales</div>
                         <h2 class="text-success">${{ number_format($totals['sales'], 2) }}</h2>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <div class="wg-box p-4 text-center bg-primary bg-opacity-10">
+                    <div class="wg-box p-4 text-center bg-white shadow-sm border-start border-4 border-primary">
                         <div class="text-muted mb-2">Total Orders</div>
                         <h2 class="text-primary">{{ $totals['orders'] }}</h2>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <div class="wg-box p-4 text-center bg-info bg-opacity-10">
+                    <div class="wg-box p-4 text-center bg-white shadow-sm border-start border-4 border-info">
                         <div class="text-muted mb-2">Average Order Value</div>
                         <h2 class="text-info">${{ number_format($totals['average'], 2) }}</h2>
                     </div>
@@ -75,7 +75,7 @@
             <div class="wg-box">
                 <h5 class="mb-3">Sales Data</h5>
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped" style="min-width: 600px;">
                         <thead>
                             <tr>
                                 <th>Period</th>
