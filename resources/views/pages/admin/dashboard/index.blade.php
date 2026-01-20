@@ -76,9 +76,9 @@
                                                     <h4>{{ $todayOrders }}</h4>
                                                 </div>
                                             </div>
-                                            <div class="box-icon-trending">
-                                                <i class="icon-trending-up"></i>
-                                                <div class="body-title number">0.00%</div>
+                                            <div class="box-icon-trending {{ $ordersGrowth >= 0 ? 'up' : 'down' }}">
+                                                <i class="icon-trending-{{ $ordersGrowth >= 0 ? 'up' : 'down' }}"></i>
+                                                <div class="body-title number">{{ number_format(abs($ordersGrowth), 2) }}%</div>
                                             </div>
                                         </div>
                                         <div class="wrap-chart">

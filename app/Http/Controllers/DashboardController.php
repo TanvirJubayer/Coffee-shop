@@ -25,6 +25,13 @@ class DashboardController extends Controller
 
         // 3. Total Orders Today
         $todayOrders = Order::whereDate('created_at', Carbon::today())->count();
+        $yesterdayOrders = Order::whereDate('created_at', Carbon::yesterday())->count();
+        
+        if ($yesterdayOrders > 0) {
+            $ordersGrowth = (($todayOrders - $yesterdayOrders) / $yesterdayOrders) * 100;
+        } else {
+            $ordersGrowth = $todayOrders > 0 ? 100 : 0;
+        }
         
         // 4. Average Order Value (Today)
         $averageOrderValue = $todayOrders > 0 ? $todaySales / $todayOrders : 0;
@@ -88,7 +95,7 @@ class DashboardController extends Controller
             'todaySales', 'monthlyRevenue', 'todayOrders', 'lowStockProducts',
             'totalSales', 'profit', 'ordersPaid', 'totalVisitor', 
             'recentOrders', 'dates', 'sales', 'topProducts',
-            'dailyTopProduct', 'chartData', 'averageOrderValue'
+            'dailyTopProduct', 'chartData', 'averageOrderValue', 'ordersGrowth'
         ));
     }
 }
